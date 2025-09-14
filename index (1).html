@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vũ minh tiến</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+      background: #000;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 10; /* hạt rơi trên card */
+      pointer-events: none;
+    }
+
+    .snowflakes {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 10; /* tuyết cũng rơi trên card */
+    }
+    .snowflake {
+      position: absolute;
+      top: -10%;
+      color: #fff;
+      font-size: 18px;
+      text-shadow: 0 0 5px #0ff;
+      animation-name: fall, sway;
+      animation-duration: 10s, 3s;
+      animation-iteration-count: infinite, infinite;
+      animation-timing-function: linear, ease-in-out;
+    }
+    @keyframes fall {
+      0% { top: -10%; }
+      100% { top: 100%; }
+    }
+    @keyframes sway {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(80px); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(20, 20, 20, 0.85);
+      padding: 35px;
+      border-radius: 20px;
+      text-align: center;
+      width: 360px;
+      box-shadow: 0 0 40px rgba(0, 255, 170, 0.4);
+      backdrop-filter: blur(10px);
+      transition: 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 50px rgba(138, 43, 226, 0.7);
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #00ffaa;
+      margin-bottom: 15px;
+      box-shadow: 0 0 25px #00ffaa, 0 0 50px #8a2be2;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-size: 30px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #00ffaa, #ff00cc, #8a2be2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 20px rgba(255,0,200,0.6), 0 0 40px rgba(0,255,200,0.4);
+    }
+
+    .typing {
+      font-size: 15px;
+      font-weight: 500;
+      color: #eee;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #00ffaa;
+      width: 0;
+      margin: 0 auto 20px auto;
+      animation: typing 6s steps(40, end) infinite alternate,
+                 blink 0.7s step-end infinite;
+      text-shadow: 0 0 10px #00ffaa;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .links a {
+      display: block;
+      text-decoration: none;
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .links a::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(0,255,170,0.4), transparent);
+      transition: all 0.5s;
+    }
+
+    .links a:hover::before {
+      left: 100%;
+    }
+
+    .links a:hover {
+      background: rgba(0,255,170,0.1);
+      box-shadow: 0 0 20px #00ffaa, 0 0 40px #8a2be2;
+      transform: scale(1.08);
+    }
+
+    footer {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+
+  <div class="card">
+  <img src="cmmmmduongngu.jpg" alt="Avatar" class="avatar">
+  <h1>vũ mĩnh tiến</h1>
+  <p class="typing">root@localhost:~# echo "Hello Word!!"</p>
+  <div class="links">
+    <a href="https://www.facebook.com/pham.tung.511413" target="_blank">📌 Facebook</a>
+    <a href="https://gdvuytin.com/" target="_blank">📌 cọc checkscam</a>
+    <a href="https://zalo.me/0368022655 "target="_blank">📌 zalo</a>
+    <a href="https://t.me/+0964084203" target="_blank">📌 Telegram</a>
+    <a href="mailto:khanhtungdz14@gmail.com">✉️ Gửi Email</a>
+  </div>
+  <footer>© admin:Vũ Minh Tiến</footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1,
+        d: Math.random() * 1 + 0.5
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(0,255,170,0.8)";
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2, false);
+        ctx.fill();
+      });
+      update();
+    }
+
+    function update() {
+      particles.forEach(p => {
+        p.y += p.d;
+        if (p.y > canvas.height) {
+          p.y = 0;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    setInterval(draw, 33);
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    document.querySelectorAll(".snowflake").forEach(el => {
+      el.style.left = Math.random() * 100 + "%";
+      el.style.fontSize = (12 + Math.random() * 20) + "px";
+      el.style.animationDelay = (Math.random() * 10) + "s, " + (Math.random() * 3) + "s";
+    });
+  </script>
+</body>
+</html>
